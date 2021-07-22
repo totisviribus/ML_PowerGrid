@@ -2,5 +2,7 @@
 
 Machine learning prediction of synchronous state recovery from random perturbation.
 
-Training data link:
+
+
+Training dataset link:
 https://www.dropbox.com/sh/jsehhmpcfx35mhi/AAA2sOa5ANQUMg0iH8TsXBaHa?dl=0
