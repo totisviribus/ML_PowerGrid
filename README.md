@@ -1,6 +1,6 @@
 # Power-grid stability predictions using transferable machine learning (https://arxiv.org/abs/2105.07562)
 
-Machine learning prediction of synchronous state recovery from random perturbation.
+All data sets and python codes for machine learning predictions for power-grid stability.
 
 
 
