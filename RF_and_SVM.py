@@ -12,6 +12,7 @@ import os.path
 what=str(sys.argv[1])	# Homo or Hetero
 cnt=int(sys.argv[2])	# 1~10
 alg=str(sys.argv[3])	# RF or SVM
+
 if alg == "RF" or alg == "SVM":
 	print(alg)
 else:
@@ -52,6 +53,7 @@ y_val = Val_data[:,12]
 X_train=np.concatenate((X_train,X_val),axis=0)
 y_train=np.concatenate((y_train,y_val),axis=None)
 
+
 # Test Data
 Test_data=np.loadtxt(Test)
 X1 = Test_data[:, 1:8]
@@ -64,32 +66,28 @@ sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.fit_transform(X_test)
 
-
+##################################################
 # Training
 if alg=="SVM":
 	model = svm.SVC(gamma='scale')
 	model.fit(X_train,y_train)
-
-	# Save Model
-	svmf='./SVM_Model_%s%d.sav' %(what,cnt)
-	joblib.dump(model, svmf)
-	# Load Model
-	#model = joblib.load(svmf)
+	model_path='./SVM_Model_%s%d.sav' %(what,cnt)
 elif alg=="RF":
 	model = RandomForestClassifier(n_estimators=500, bootstrap= True, max_features = 'sqrt')
 	model.fit(X_train,y_train)
-
-	# Save Model
-	rff='RF_Model_%s%d.sav' %(what,cnt)
-	joblib.dump(model, rff)
-	# Load Model
-	#model = joblib.load(rff)
+	model_path='RF_Model_%s%d.sav' %(what,cnt)
 else:
 	quit()
+	
+##################################################
+# Save Model
+joblib.dump(model, model_path)
+# Load Model
+#model = joblib.load(model_path)
 
 # Test
 y_pred= model.predict(X_test)
-
+##################################################
 # Calc.
 Ndata=len(y_test)
 TP,TN,FP,FN = 0.,0.,0.,0.
