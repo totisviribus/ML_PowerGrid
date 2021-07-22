@@ -9,9 +9,9 @@ import random
 import pickle
 import sys
 
-
+##########################################################
 class SyncDataSet(Dataset):
-##########		Data
+##		Data
 ## / 0. node_index /
 ## / 1. k / 2. core / 3. EC / 4. CC / 5. BC / 6. CoI /
 ## / 7. P /
@@ -19,7 +19,6 @@ class SyncDataSet(Dataset):
 ## / 10. (th_pert - th) / 11. w_pert /
 ## / 12. label /
 ## / 13. PR / 14. C /
-##########
 	def __init__(self, path,fname):
 		self.fname=fname
 		data=np.loadtxt(path + fname, dtype=np.float32)
@@ -48,8 +47,7 @@ class SyncDataSet(Dataset):
 	def __len__(self):
 		return self.len
 
-
-##########
+##########################################################
 class Net(nn.Module):
 	def __init__(self,input_size,hidden1_size,hidden2_size,hidden3_size,hidden4_size,hidden5_size):
 		super(Net, self).__init__()
@@ -97,8 +95,7 @@ class Net(nn.Module):
 		output  = self.sf(hidden5)
 		return output
 
-
-################################
+##########################################################
 def Run_NN(device,model,optimizer,criterion,epoch,ftn,data_loader,fname):
 	N_dataset=len(data_loader.dataset)
 	ave_loss, acc= 0., 0.
@@ -154,7 +151,7 @@ def Run_NN(device,model,optimizer,criterion,epoch,ftn,data_loader,fname):
 	wfile=open(fname,'a')
 	wfile.write( "%d\t%.8le\t%.8le\t%.8le\t%.8le\t%.8le\t%.8le\n"%(epoch,ave_loss,acc,precision,sensitivity,npv,specificity) )
 	wfile.close()
-#############################
+##########################################################
 
 #def main():
 device = torch.device('cuda:0')
@@ -170,15 +167,15 @@ cnt=int(sys.argv[3])		# 1~10
 
 BS=64
 hyper_param=1e-4	# 1e-6
-params={'batch_size': BS, 'shuffle' : False, 'drop_last' : True}
+params={'batch_size': BS, 'shuffle' : True, 'drop_last' : True}
 
-###############################
-##	------	Model
+
+# Model
 model=Net(9,10,20,20,10,2)
 model=model.to(device)
 # Binary Cross Entorpy Loss
 criterion=nn.BCELoss(reduction='mean')
-#	Adam
+# Adam optimizer
 optimizer = optim.Adam(model.parameters(), lr =hyper_param)
 
 # Data
@@ -192,11 +189,6 @@ val_dataset = SyncDataSet(data_path,"Validation.txt")
 val_loader = DataLoader(dataset=val_dataset, **params)
 wfname_val="./NN_Validation_%s%d.txt" % (what,cnt)
 
-# Save model
-model_path='./NN_Model_%s%d.pt' %(what,cnt)
-torch.save(model,model_path)
-#	Load model
-#model=torch.load(model_path)
 
 
 # Test
@@ -210,9 +202,18 @@ for epoch in range(MaxEpoch+1):
 	Run_NN(device,model,optimizer,criterion,epoch,"Train",train_loader,wfname_train)
 # Validation
 	Run_NN(device,model,optimizer,criterion,epoch,"Validate",val_loader,wfname_val)
+
+model_path='./NN_Model_%s%d.pt' %(what,cnt)
+# Save model
+torch.save(model,model_path)
+#	Load model
+#model=torch.load(model_path)
 # Test
 with torch.no_grad():
 	Run_NN(device,model,optimizer,criterion,MaxEpoch,"Test",test_loader,wfname_test)
 
+	
+##########################################################
+	
 #if __name__ == "__mani__":
 #	main()
