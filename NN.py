@@ -184,13 +184,6 @@ data_path='./Synthetic_Data/Data%d/%s/' % (cnt,what)
 train_dataset = SyncDataSet(data_path,"Train.txt")
 train_loader = DataLoader(dataset=train_dataset, **params)
 wfname_train="./NN_Training_%s%d.txt" % (what,cnt)
-# Validation
-val_dataset = SyncDataSet(data_path,"Validation.txt")
-val_loader = DataLoader(dataset=val_dataset, **params)
-wfname_val="./NN_Validation_%s%d.txt" % (what,cnt)
-
-
-
 # Test
 test_dataset = SyncDataSet(data_path,"Test.txt")
 test_loader = DataLoader(dataset=test_dataset, **params)
@@ -200,13 +193,11 @@ wfname_test="./NN_Synthetic_%s%d.txt" % (what,cnt)
 for epoch in range(MaxEpoch+1):
 # Training
 	Run_NN(device,model,optimizer,criterion,epoch,"Train",train_loader,wfname_train)
-# Validation
-	Run_NN(device,model,optimizer,criterion,epoch,"Validate",val_loader,wfname_val)
 
 model_path='./NN_Model_%s%d.pt' %(what,cnt)
 # Save model
 torch.save(model,model_path)
-#	Load model
+# Load model
 #model=torch.load(model_path)
 # Test
 with torch.no_grad():
