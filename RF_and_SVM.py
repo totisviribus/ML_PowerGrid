@@ -32,7 +32,6 @@ else:
 # Data Load
 data_path='./Synthetic_Data/Data%d/%s/' % (cnt,what)
 Train = data_path + 'Train.txt'
-Val = data_path + 'Validation.txt'
 Test  = data_path + 'Test.txt'
 
 # Training Data
@@ -42,17 +41,6 @@ X1 = Train_data[:, 1:8]
 X2 = Train_data[:, 10:12]
 X_train = np.append(X1,X2,axis=1)
 y_train = Train_data[:, 12]
-
-Val_data=np.loadtxt(Val)
-rd.shuffle(Val_data)
-X1 = Val_data[:, 1:8]
-X2 = Val_data[:, 10:12]
-X_val = np.append(X1,X2,axis=1)
-y_val = Val_data[:,12]
-
-X_train=np.concatenate((X_train,X_val),axis=0)
-y_train=np.concatenate((y_train,y_val),axis=None)
-
 
 # Test Data
 Test_data=np.loadtxt(Test)
@@ -67,7 +55,7 @@ X_train = sc.fit_transform(X_train)
 X_test = sc.fit_transform(X_test)
 
 ##################################################
-# Training
+# Train model
 if alg=="SVM":
 	model = svm.SVC(gamma='scale')
 	model.fit(X_train,y_train)
@@ -75,7 +63,7 @@ if alg=="SVM":
 elif alg=="RF":
 	model = RandomForestClassifier(n_estimators=500, bootstrap= True, max_features = 'sqrt')
 	model.fit(X_train,y_train)
-	model_path='RF_Model_%s%d.sav' %(what,cnt)
+	model_path='./RF_Model_%s%d.sav' %(what,cnt)
 else:
 	quit()
 	
