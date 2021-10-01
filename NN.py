@@ -130,16 +130,16 @@ def Run_NN(device,model,optimizer,criterion,epoch,ftn,data_loader,fname):
 
 		for i in range(N_MB):
 			PN=labels[i][0]
-			if(checker[i]==1):		# True
-				if(PN==1):			#TP
+			if(checker[i]==1):		# True Prediction
+				if(PN==1):			# Label +1 -- TP
 					TP+=1
-				else:				#TN
+				else:				# Label -1 -- TN
 					TN+=1
-			else:					# False
-				if(PN==1):			#FP
-					FP+=1
-				else:				#FN
+			else:					# False Prediction
+				if(PN==1):			# Label +1 -- FN
 					FN+=1
+				else:				# Label -1 -- FP
+					FP+=1
 	ave_loss/=N_dataset
 	acc/=N_dataset
 
